@@ -8,7 +8,7 @@ export default function Header() {
     const { theme } = useTheme();
     
     const bgClass = theme === "light" ? "bg-[#4e6fe0]" : "bg-gray-900";
-    const searchClass = theme === "light" ? "bg-[#6b8af1]" : "bg-gray-800"
+    const searchClass = theme === "light" ? "bg-[#4e6fe0]" : "bg-gray-900"
 
   return (
     <div>

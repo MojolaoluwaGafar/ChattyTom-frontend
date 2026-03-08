@@ -120,7 +120,7 @@ export default function SignUp() {
                 </div>
             </div>
     
-            <button disabled={isLoading} type='submit' className="w-full h-10 my-2 bg-[#4e6fe0] hover:bg-[#2b4dbc] rounded-md text-white">{isLoading ? "Signing up" : "Sign up"}</button>
+            <button disabled={isLoading} type='submit' className="w-full h-10 my-2 bg-[#4e6fe0] hover:bg-[#2b4dbc] rounded-md text-white">{isLoading ? "Signing up..." : "Sign up"}</button>
             <p className='text-center text-sm md:text-lg pb-3'>Already have an account? <Link to="/login"><span className='text-[#4e6fe0] font-semibold'>Sign in</span></Link></p>
           </form>
         </AuthLayout>

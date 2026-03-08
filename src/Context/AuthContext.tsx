@@ -42,6 +42,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     () => localStorage.getItem("token")
   );
 
+  const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,});
+
   const signUp = async (formData: {
     email: string;
     firstName: string;
@@ -49,8 +52,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     password: string;
   }) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_AUTH_BASE_URL}/auth/signup`,
+      const response = await api.post(
+        `/auth/signup`,
         formData,
         {
           headers: {
@@ -73,8 +76,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (formData: { email: string; password: string }) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_AUTH_BASE_URL}/auth/signin`,
+      const response = await api.post(
+        `/auth/signin`,
         formData,
         {
           headers: {
@@ -82,11 +85,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           },
         }
       );
-
-      setUser(response.data.user);
-      setToken(response.data.token);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      const loggedInUser= response.data.user;
+      const token = response.data.token;
+      setUser(loggedInUser);
+      setToken(token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(loggedInUser));
+      localStorage.setItem("userId", loggedInUser.id.toString());
 
       return response.data;
     } catch (error: any) {
