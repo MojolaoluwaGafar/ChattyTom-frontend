@@ -29,7 +29,7 @@ export default function AuthLayout({ title, className, children }: AuthLayoutPro
          <button
           type='button'
           onClick={toggleTheme}
-          className="absolute bottom-4 right-4"
+          className="absolute bottom-8 right-4"
         >
           {theme ?  <FaToggleOff /> : <FaToggleOn />}
         </button>

@@ -42,7 +42,7 @@ export default function ChatInput({ onSend }: Props) {
       <button
         type="button"
         onClick={handleSend}
-        className="h-10 w-10 bg-gradient-to-b from-[#bgf9df2] via-[#5C86E8] via-[#4E6FE0] via-[#2E3FAF] to-[#9BB8FF] flex items-center justify-center rounded-xl bg-[#4e6fe0] text-white hover:opacity-90 transition"
+        className="h-10 w-10 bg-gradient-to-b from-[#6f9df2] via-[#5C86E8] via-[#4E6FE0] via-[#2E3FAF] to-[#9BB8FF] flex items-center justify-center rounded-xl bg-[#4e6fe0] text-white hover:opacity-90 transition"
       >
         <IoIosSend size={25} /> 
       </button>

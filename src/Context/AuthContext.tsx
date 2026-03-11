@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
-import axios from "axios";
+import React, { createContext, useState, ReactNode } from "react";
+import API from "../API/client"
 
 // Define auth context shape
 interface User {
@@ -32,7 +32,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState<User | null>(() => {
      try {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -42,9 +42,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     () => localStorage.getItem("token")
   );
 
-  const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,});
-
   const signUp = async (formData: {
     email: string;
     firstName: string;
@@ -52,7 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     password: string;
   }) => {
     try {
-      const response = await api.post(
+      const response = await API.post(
         `/auth/signup`,
         formData,
         {
@@ -74,9 +71,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const login = async (formData: { email: string; password: string }) => {
+  const login = async (formData: {
+     email: string; 
+     password: string 
+    }) => {
     try {
-      const response = await api.post(
+      const response = await API.post(
         `/auth/signin`,
         formData,
         {

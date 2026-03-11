@@ -53,13 +53,13 @@ export default function ChatList({ onSelectConversation }: Props) {
           // Compute name dynamically
           const displayName = conv.display_name
             ? conv.display_name // group chat
-            : conv.participants?.filter((p) => p.id !== user.id)
+            : conv.participants?.filter((p) => p.id !== user?.id)
                 .map((p) => `${p.firstname} ${p.lastname}`)
                 .join(", ");
 
           // Pick avatar (first other participant)
           const otherUser = conv.participants?.find(
-            (p) => p.id !== user.id
+            (p) => p.id !== user?.id
           );
 
           return (
