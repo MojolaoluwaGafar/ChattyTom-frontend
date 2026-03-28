@@ -2,20 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import DefaultAvatar from "../../assets/defaultAvatar.png";
 import { useTheme } from '../../Context/ThemeContext';
 import { FaArrowDown } from "react-icons/fa";
-
-type Participant = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  profile_image?: string;
-};
-
-type Message = {
-  id: string;
-  sender_id: number;
-  content: string;
-  created_at: string;
-};
+import type { Message } from '../../types/message';
+import type { Participant } from '../../types/participants';
 
 type Props = {
   messages: Message[];
@@ -63,7 +51,7 @@ export default function MessageList({ messages, loggedInUserId, participants }: 
     onScroll={handleScroll} 
     className={`${bgClass} flex-1 p-4 overflow-y-auto space-y-2`}>
       {messages.map(msg => {
-  const sender = participants.find(p => p.id === msg.sender_id);
+  const sender = participants?.find(p => p.id === msg.sender_id);
   const isMine = msg.sender_id === loggedInUserId;
   const isDm  = participants.length === 2;
   const isOtherUser = msg.sender_id != loggedInUserId

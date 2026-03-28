@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IoIosSend } from "react-icons/io";
 import { RiMessage3Line } from "react-icons/ri";
 import { GrEmoji } from "react-icons/gr";
 import { useTheme } from "../../Context/ThemeContext";
+import { socket } from "../../Socket/socket";
 
 type Props = {
   onSend: (message: string) => void;
+  conversationId: string,
+  userId : number,
 };
 
-export default function ChatInput({ onSend }: Props) {
+export default function ChatInput({ onSend, conversationId, userId }: Props) {
   const [message, setMessage] = useState("");
-
+  const typingTimeout = useRef<Node.JS.Timeout | null>(null)
   const { theme } = useTheme()
   const bgClass = theme === "light" ? "" : "bg-gray-900 text-white" 
   const handleSend = () => {
@@ -19,8 +22,29 @@ export default function ChatInput({ onSend }: Props) {
 
     onSend(trimmed);
     setMessage("");
-  };
 
+    socket.emit("typing_stop", {
+      conversationId,
+      userId
+    })
+  };
+  const handleTyping = () => {
+    socket.emit("typing_start", {
+    conversationId,
+    userId,
+  });
+
+  if (typingTimeout.current) {
+    clearTimeout(typingTimeout.current);
+  }
+
+  typingTimeout.current = setTimeout(() => {
+    socket.emit("typing_stop", {
+      conversationId,
+      userId
+    });
+  }, 2000);
+  };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSend();
@@ -32,7 +56,10 @@ export default function ChatInput({ onSend }: Props) {
       <input
         type="text"
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={(e) => {
+          setMessage(e.target.value);
+          handleTyping()
+        }}
         onKeyDown={handleKeyDown}
         placeholder="Type a message..."
         className="flex-1 h-10 pl-10 rounded-xl border border-gray-300  outline-none focus:ring-2 focus:ring-[#4e6fe0]"

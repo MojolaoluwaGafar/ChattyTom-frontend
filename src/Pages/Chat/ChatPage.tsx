@@ -1,17 +1,14 @@
-import React, {useState} from 'react'
 import ChatList from "../../Components/Chat/ChatList"
 import ConversationPage from './ConversationPage'
-
+import { useChat } from '../../hooks/useChat';
 
 export default function ChatPage() {
-  const [selectedConversationId, setSelectedConversationId] =
-    useState<string | null>(null);
-
+  const { selectedConversationId, setSelectedConversationId } = useChat()
   return (
     <div className="w-full">
       <div className="lg:hidden">
         {!selectedConversationId ? (
-          <ChatList onSelectConversation={setSelectedConversationId} />
+          <ChatList />
         ) : (
           <ConversationPage
             conversationId={selectedConversationId}
@@ -20,9 +17,10 @@ export default function ChatPage() {
         )}
       </div>
 
+
       <div className="hidden lg:flex w-full">
         <div className="w-1/3 border-gray-700 border-r">
-          <ChatList onSelectConversation={setSelectedConversationId} />
+          <ChatList />
         </div>
 
         <div className="w-2/3">

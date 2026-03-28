@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 interface ThemeContextType {
   theme: "light" | "dark";
@@ -8,7 +8,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
@@ -16,12 +16,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     if (storedTheme) return storedTheme;
 
-    // fallback: system preference
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     return prefersDark ? "dark" : "light";
   });
 
-  // Persist theme changes
   useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);

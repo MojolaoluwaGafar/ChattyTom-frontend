@@ -5,12 +5,16 @@ import App from './App.tsx'
 import { ToastContainer } from "react-toastify"
 import { ThemeProvider } from "./Context/ThemeContext.tsx"
 import { AuthProvider } from "./Context/AuthContext.tsx"
+import { PresenceProvider } from './Context/PresenceContext.tsx'
+import { ChatProvider } from './Context/ChatContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider>
       <AuthProvider>
-        <App />
+        <ChatProvider>
+          <PresenceProvider>
+          <ThemeProvider>
+            <App />
         <ToastContainer  position="top-center"
         autoClose={3000}
         hideProgressBar={false}
@@ -18,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
         closeOnClick
         pauseOnHover
         draggable />
+          </ThemeProvider>
+        </PresenceProvider>
+        </ChatProvider>
       </AuthProvider>
-    </ThemeProvider>
   </StrictMode>,
 )

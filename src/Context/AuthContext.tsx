@@ -1,14 +1,7 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import API from "../API/client"
-
-// Define auth context shape
-interface User {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  created_at: string;
-}
+import { socket } from "../Socket/socket"
+import type { User } from "../types/user";
 
 interface AuthContextType {
   token : string | null;
@@ -23,12 +16,13 @@ interface AuthContextType {
     email: string;
     password: string;
   }) => void;
+  logout : ()=> void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -41,6 +35,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [token, setToken] = useState<string | null>(
     () => localStorage.getItem("token")
   );
+
+  useEffect(() => {
+  if (user && !socket.connected) {
+    socket.auth = { userId: user.id };
+    socket.connect();
+  }
+}, [user]);
 
   const signUp = async (formData: {
     email: string;
@@ -93,6 +94,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.setItem("user", JSON.stringify(loggedInUser));
       localStorage.setItem("userId", loggedInUser.id.toString());
 
+      socket.auth = {
+        userId : loggedInUser.id
+      }
+      if (!socket.connected) {
+        socket.connect()
+      }
       return response.data;
     } catch (error: any) {
       console.error("Login failed:", error.response?.data || error.message);
@@ -100,8 +107,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const logout = () => {
+    socket.disconnect();
+    setUser(null);
+    setToken(null);
+    
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.clear()
+    sessionStorage.clear()
+   };
+
   return (
-    <AuthContext.Provider value={{ user, signUp, login, token }}>
+    <AuthContext.Provider value={{ user, signUp, login,logout, token }}>
       {children}
     </AuthContext.Provider>
   );
